@@ -3,6 +3,7 @@ from __future__ import print_function
 
 import numpy as np
 import pandas as pd
+import pdb
 np.random.seed(1337) # for reproducibility
 
 from keras.models import Sequential
@@ -20,11 +21,11 @@ from sklearn.preprocessing import StandardScaler
 
     Compatible Python 2.7-3.4. Requires Scikit-Learn and Pandas.
 
-    Recommended to run on GPU: 
+    Recommended to run on GPU:
         Command: THEANO_FLAGS=mode=FAST_RUN,device=gpu,floatX=float32 python kaggle_otto_nn.py
         On EC2 g2.2xlarge instance: 19s/epoch. 6-7 minutes total training time.
 
-    Best validation score at epoch 21: 0.4881 
+    Best validation score at epoch 21: 0.4881
 
     Try it at home:
         - with/without BatchNormalization (BatchNormalization helps!)
@@ -118,6 +119,7 @@ model.compile(loss='categorical_crossentropy', optimizer="adam")
 
 print("Training model...")
 
+pdb.set_trace()
 model.fit(X, y, nb_epoch=20, batch_size=128, validation_split=0.15)
 
 print("Generating submission...")

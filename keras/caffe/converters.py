@@ -317,7 +317,7 @@ def model_from_param(layers):
                                           i * stacks_size_per_chunk: (i + 1) * stacks_size_per_chunk, :, :]
                 chunk_weights[:] = np.array(blobs[0].data[i * chunk_data_size:(i + 1) * chunk_data_size]).reshape(chunk_weights.shape)
 
-            weights = [weights_p, weights_b]
+            weights = [weights_p.astype(dtype=np.float32), weights_b.astype(dtype=np.float32)]
 
             stride_h = max(layer.convolution_param.kernel_h, layer.convolution_param.stride)
             stride_w = max(layer.convolution_param.kernel_w, layer.convolution_param.stride)
@@ -347,9 +347,9 @@ def model_from_param(layers):
             blobs = layer.blobs
             nb_filter, stack_size, nb_col, nb_row = blobs[0].num, blobs[0].channels, blobs[0].height, blobs[0].width
 
-            weights_p = np.array(blobs[0].data).reshape(nb_filter, stack_size, nb_col, nb_row)[0, 0, :, :].T
+            weights_p = np.array(blobs[0].data).reshape(nb_filter, stack_size, nb_col, nb_row)[0, 0, :, :]
             weights_b = np.array(blobs[1].data)
-            weights = [weights_p, weights_b]
+            weights = [weights_p.astype(dtype=np.float32), weights_b.astype(dtype=np.float32)]
 
             model.add_node(Flatten(), name=name + '_flatten', input=input_layer_name)
             model.add_node(Dense(nb_row, nb_col, weights=weights), name=name, input=name + '_flatten')
@@ -453,7 +453,7 @@ def convert_weights(layers):
                                           i * stacks_size_per_chunk: (i + 1) * stacks_size_per_chunk, :, :]
                 chunk_weights[:] = np.array(blobs[0].data[i * chunk_data_size:(i + 1) * chunk_data_size]).reshape(chunk_weights.shape)
 
-            layer_weights = [weights_p, weights_b]
+            layer_weights = [weights_p.astype(dtype=np.float32), weights_b.astype(dtype=np.float32)]
             weights[name] = layer_weights
 
         elif layer.type == 14:
@@ -461,10 +461,10 @@ def convert_weights(layers):
             blobs = layer.blobs
             nb_filter, stack_size, nb_col, nb_row = blobs[0].num, blobs[0].channels, blobs[0].height, blobs[0].width
 
-            weights_p = np.array(blobs[0].data).reshape(nb_filter, stack_size, nb_col, nb_row)[0, 0, :, :].T
+            weights_p = np.array(blobs[0].data).reshape(nb_filter, stack_size, nb_col, nb_row)[0, 0, :, :]
             weights_b = np.array(blobs[1].data)
 
-            layer_weights = [weights_p, weights_b]
+            layer_weights = [weights_p.astype(dtype=np.float32), weights_b.astype(dtype=np.float32)]
             weights[name] = layer_weights
 
     return weights
